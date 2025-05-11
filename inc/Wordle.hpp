@@ -21,6 +21,7 @@
 # include <fstream>
 # include <algorithm>
 # include <cctype>
+# include <map>
 # include "color.hpp"
 
 # define AND	<<
@@ -51,6 +52,7 @@ class Wordle {
         void                askWord( str testedWord );
         void                analyseWord( str word );
         void                displayGrid( void );
+        void                final( void );
 
     private:
         std::vector<str>    _LaDictionary;

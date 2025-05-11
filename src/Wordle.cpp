@@ -13,6 +13,7 @@
 #include "Wordle.hpp"
 
 static std::vector<str> createDictio( str path );
+static str trim( cref(str) s );
 
 Wordle::Wordle( void ) {
     this->_win      = false;
@@ -88,19 +89,43 @@ void Wordle::askWord( str testedWord ) {
         this->_win = true;
 }
 
-void    Wordle::analyseWord( str word ) {
-    size_t  index = 0;
-    char    c;
+void Wordle::analyseWord(str word) {
+    size_t index = 0;
+    char c;
 
-    for (; index < word.size(); ++index) {
+    std::map<char, int> count_in_word;
+    std::map<char, int> validated;
+
+    for (size_t i = 0; i < this->_word.size(); ++i)
+        count_in_word[this->_word[i]]++;
+    for (index = 0; index < word.size(); ++index) {
         c = word[index];
         this->_board[this->_index][index] = c;
-        if (c == this->_word[index])
+
+        if (c == this->_word[index]) {
             this->_check[this->_index][index] = 'v';
-        else if (this->_word.find(c, 0) != std::string::npos)
-            this->_check[this->_index][index] = 'p';
-        else
+            validated[c]++;
+        } else if (this->_word.find(c) == std::string::npos) {
             this->_check[this->_index][index] = 'x';
+        } else {
+            this->_check[this->_index][index] = 'p';
+        }
+    }
+    std::map<char, int> used;
+    for (index = 0; index < word.size(); ++index) {
+        c = word[index];
+        if (this->_check[this->_index][index] == 'p') {
+            used[c] = validated[c];
+            for (size_t j = 0; j < index; ++j) {
+                if (word[j] == c && this->_check[this->_index][j] == 'p')
+                    used[c]++;
+            }
+            if (used[c] < count_in_word[c]) {
+                validated[c]++;
+            } else {
+                this->_check[this->_index][index] = 'x';
+            }
+        }
     }
     this->_index++;
 }
@@ -137,6 +162,19 @@ NLINE;
     }
 }
 
+void    Wordle::final( void ) {
+    if (this->isWon()) {
+        NLINE;
+        PRINT CYAN "Congrats! The world was: " AND MAGENTA AND this->_word CENDL;
+        NLINE;
+    }
+    else {
+        NLINE;
+        PRINT CYAN "Better Luck next time... The world was: " AND MAGENTA AND this->_word CENDL;
+        NLINE;
+    }
+}
+
 static std::vector<str> createDictio( str path ) {
     std::ifstream        file;
     std::vector<str>     dictio;
@@ -145,9 +183,21 @@ static std::vector<str> createDictio( str path ) {
     file.open(path.c_str());
     if (file.is_open()) {
         while (std::getline(file, line)) {
-            dictio.push_back(line);
+            line = trim(line);
+            if (!line.empty())
+                dictio.push_back(line);
         }
         file.close();
     }
     return (dictio);
+}
+
+static str trim( cref(str) s ) {
+    size_t start = 0;
+    while (start < s.size() && std::isspace(static_cast<unsigned char>(s[start])))
+        ++start;
+    size_t end = s.size();
+    while (end > start && std::isspace(static_cast<unsigned char>(s[end - 1])))
+        --end;
+    return s.substr(start, end - start);
 }

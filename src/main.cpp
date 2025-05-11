@@ -17,10 +17,8 @@ void Clear()
 {
 #if defined _WIN32
     system("cls");
-    //clrscr(); // including header file : conio.h
 #elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
     system("clear");
-    //std::cout<< u8"\033[2J\033[1;1H"; //Using ANSI Escape Sequences 
 #elif defined (__APPLE__)
     system("clear");
 #endif
@@ -28,6 +26,18 @@ void Clear()
 
 int main( int argc, char **argv )
 {
+    if (argc == 2 && argv[1] && str(argv[1]) == "help") {
+        NLINE;
+        PRINT YELLOW "How to use: ft_wordle" CENDL;
+        NLINE;
+        PRINT CYAN "To use this program, do: " MAGENTA "./ft_wordle " CYAN "to have a classic wordle with the built-in dictionary" CENDL;
+        PRINT CYAN "You can also use: " MAGENTA "./ft_wordle <path_to_your_dictionary> " CYAN "or " MAGENTA "./ft_wordle <path_to_your_answer_dictionary> <path_to_all_correct_answer_dictionary>" CENDL;
+        NLINE;
+        PRINT YELLOW "And have fun :D" CENDL;
+        NLINE;
+        return (0);
+    }
+
     Wordle  game;
     size_t  attempt = 1;
     str     word;
@@ -39,12 +49,12 @@ int main( int argc, char **argv )
             game.addDictionary("", "");
             break;
         case 2:
-            if (argv[2])
-                game.addDictionary(str(argv[2]), "");
+            if (argv[1])
+                game.addDictionary(str(argv[1]), "");
             break;
         case 3:
-            if (argv[2] && argv[3])
-                game.addDictionary(str(argv[2]), str(argv[3]));
+            if (argv[1] && argv[2])
+                game.addDictionary(str(argv[1]), str(argv[2]));
             break;
         default:
             return (1);
@@ -68,8 +78,7 @@ int main( int argc, char **argv )
         }
         else
             PRINT RED "Not a real word" CENDL;
-        if (game.isWon())
-            PRINT GREEN "GG" CENDL;
     }
+    game.final();
     return (0);
 }
