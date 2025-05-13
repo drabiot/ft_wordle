@@ -6,7 +6,7 @@
 /*   By: tchartie <tchartie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 12:32:18 by tchartie          #+#    #+#             */
-/*   Updated: 2025/05/10 12:32:18 by tchartie         ###   ########.fr       */
+/*   Updated: 2025/05/13 21:36:42 by tchartie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ bool    Wordle::isWon( void ) {
     return (this->_win);
 }
 
-void    Wordle::addDictionary( str dictioLaPath, str dictioTaPath ) {
+bool    Wordle::addDictionary( str dictioLaPath, str dictioTaPath ) {
     std::vector<str>    LaPath;
     std::vector<str>    TaPath;
 
@@ -61,12 +61,18 @@ void    Wordle::addDictionary( str dictioLaPath, str dictioTaPath ) {
         LaPath = createDictio(dictioLaPath);
         TaPath = createDictio(dictioTaPath);
     }
-    if (!LaPath.empty()) {
-        this->_LaDictionary = LaPath;
+    if (LaPath.empty()) {
+        PRINT RED "Dictionary error: A word isn't 5 character long" CENDL;
+        return (false);
     }
-    if (!TaPath.empty()) {
-        this->_TaDictionary = TaPath;
+    this->_LaDictionary = LaPath;
+    if (TaPath.empty()) {
+        PRINT RED "Dictionary error: A word isn't 5 character long" CENDL;
+        return (false);
     }
+    this->_TaDictionary = TaPath;
+    return (true);
+
 }
 
 void    Wordle::chooseWord( void ) {
@@ -165,12 +171,12 @@ NLINE;
 void    Wordle::final( void ) {
     if (this->isWon()) {
         NLINE;
-        PRINT CYAN "Congrats! The world was: " AND MAGENTA AND this->_word CENDL;
+        PRINT CYAN "Congrats! You manage to found the word " AND MAGENTA AND this->_word AND CYAN " in only " AND MAGENTA AND this->_index AND CYAN " try" CENDL;
         NLINE;
     }
     else {
         NLINE;
-        PRINT CYAN "Better Luck next time... The world was: " AND MAGENTA AND this->_word CENDL;
+        PRINT CYAN "Better Luck next time... The word was: " AND MAGENTA AND this->_word CENDL;
         NLINE;
     }
 }
@@ -186,6 +192,10 @@ static std::vector<str> createDictio( str path ) {
             line = trim(line);
             if (!line.empty())
                 dictio.push_back(line);
+            if (line.size() != 5) {
+                dictio.clear();
+                return (dictio);
+            }
         }
         file.close();
     }

@@ -6,7 +6,7 @@
 /*   By: tchartie <tchartie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 07:32:13 by tchartie          #+#    #+#             */
-/*   Updated: 2025/05/10 07:32:13 by tchartie         ###   ########.fr       */
+/*   Updated: 2025/05/13 21:37:08 by tchartie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,28 +46,35 @@ int main( int argc, char **argv )
 
     switch (argc) {
         case 1:
-            game.addDictionary("", "");
+            if (!game.addDictionary("", ""))
+                return (2);
             break;
         case 2:
             if (argv[1])
-                game.addDictionary(str(argv[1]), "");
+                if (!game.addDictionary(str(argv[1]), ""))
+                    return (2);
             break;
         case 3:
             if (argv[1] && argv[2])
-                game.addDictionary(str(argv[1]), str(argv[2]));
+                if (!game.addDictionary(str(argv[1]), str(argv[2])))
+                    return (2);
             break;
         default:
             return (1);
     }
-    if (game.getLaDictionary().empty() || game.getTaDictionary().empty())
+    if (game.getLaDictionary().empty() || game.getTaDictionary().empty()) {
+        PRINT "test" ENDL;
         return (2);
+        }
     game.chooseWord();
     Clear();
     game.displayGrid();
     while (std::cin.eof() != 1) {
         std::cout << "> ";
         std::getline(std::cin, word);
-        if (game.checkWord(word)) {
+        if (word.size() != 5)
+            PRINT RED "Input error: Need to be a 5 charater word" CENDL;
+        else if (game.checkWord(word)) {
             game.askWord(word);
             game.analyseWord(word);
             Clear();
@@ -77,7 +84,7 @@ int main( int argc, char **argv )
             ++attempt;
         }
         else
-            PRINT RED "Not a real word" CENDL;
+            PRINT RED "Input error: Not a real word" CENDL;
     }
     game.final();
     return (0);

@@ -6,7 +6,7 @@
 /*   By: tchartie <tchartie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 12:28:12 by tchartie          #+#    #+#             */
-/*   Updated: 2025/05/10 12:28:12 by tchartie         ###   ########.fr       */
+/*   Updated: 2025/05/13 21:22:13 by tchartie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ class Wordle {
         std::vector<str>    getTaDictionary( void );
         bool                isWon( void );
 
-        void                addDictionary( str dictioLaPath, str dictioTaPath );
+        bool                addDictionary( str dictioLaPath, str dictioTaPath );
         void                chooseWord( void );
         bool                checkWord( str word );
         void                askWord( str testedWord );
