@@ -6,7 +6,7 @@
 /*   By: tchartie <tchartie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 07:32:13 by tchartie          #+#    #+#             */
-/*   Updated: 2025/05/13 21:37:08 by tchartie         ###   ########.fr       */
+/*   Updated: 2025/05/15 20:28:38 by tchartie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int main( int argc, char **argv )
         std::cout << "> ";
         std::getline(std::cin, word);
         if (word.size() != 5)
-            PRINT RED "Input error: Need to be a 5 charater word" CENDL;
+            ERROR RED "Input error: Need to be a 5 charater word" CENDL;
         else if (game.checkWord(word)) {
             game.askWord(word);
             game.analyseWord(word);
@@ -84,7 +84,7 @@ int main( int argc, char **argv )
             ++attempt;
         }
         else
-            PRINT RED "Input error: Not a real word" CENDL;
+            ERROR RED "Input error: Not a real word" CENDL;
     }
     game.final();
     return (0);

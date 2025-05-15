@@ -6,7 +6,7 @@
 /*   By: tchartie <tchartie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 12:32:18 by tchartie          #+#    #+#             */
-/*   Updated: 2025/05/13 21:36:42 by tchartie         ###   ########.fr       */
+/*   Updated: 2025/05/15 20:28:55 by tchartie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,12 @@ bool    Wordle::addDictionary( str dictioLaPath, str dictioTaPath ) {
         TaPath = createDictio(dictioTaPath);
     }
     if (LaPath.empty()) {
-        PRINT RED "Dictionary error: A word isn't 5 character long" CENDL;
+        ERROR RED "Dictionary error: A word isn't 5 character long" CENDL;
         return (false);
     }
     this->_LaDictionary = LaPath;
     if (TaPath.empty()) {
-        PRINT RED "Dictionary error: A word isn't 5 character long" CENDL;
+        ERROR RED "Dictionary error: A word isn't 5 character long" CENDL;
         return (false);
     }
     this->_TaDictionary = TaPath;
